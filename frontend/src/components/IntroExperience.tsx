@@ -160,6 +160,7 @@ export function IntroExperience() {
             ref={imgRef}
             src={frameUrls[0]}
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ imageRendering: "auto" }}
             alt=""
           />
         </div>
@@ -181,11 +182,11 @@ export function IntroExperience() {
   // splitting phase
   return (
     <div className="fixed inset-0 z-[200] overflow-hidden bg-[#0d0a07]" aria-live="polite">
-      {/* ═══ LEFT CURTAIN ═══ */}
+      {/* ═══ TOP CURTAIN ═══ */}
       <motion.div
-        className="absolute left-0 top-0 h-full w-1/2 overflow-hidden border-r border-white/5"
-        initial={{ x: 0 }}
-        animate={{ x: "-100%" }}
+        className="absolute left-0 top-0 w-full h-1/2 overflow-hidden border-b border-white/5"
+        initial={{ y: 0 }}
+        animate={{ y: "-100%" }}
         transition={curtainTransition}
         onAnimationComplete={() => setPhase("done")}
       >
@@ -193,40 +194,42 @@ export function IntroExperience() {
           <img
             src="/intro-frames/ezgif-frame-051.jpg"
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ imageRendering: "auto" }}
             alt=""
           />
         </div>
       </motion.div>
 
-      {/* ═══ RIGHT CURTAIN ═══ */}
+      {/* ═══ BOTTOM CURTAIN ═══ */}
       <motion.div
-        className="absolute right-0 top-0 h-full w-1/2 overflow-hidden border-l border-white/5"
-        initial={{ x: 0 }}
-        animate={{ x: "100%" }}
+        className="absolute left-0 bottom-0 w-full h-1/2 overflow-hidden border-t border-white/5"
+        initial={{ y: 0 }}
+        animate={{ y: "100%" }}
         transition={curtainTransition}
       >
-        <div className="absolute left-[-50vw] top-0 h-screen w-screen">
+        <div className="absolute left-0 top-[-50vh] h-screen w-screen">
           <img
             src="/intro-frames/ezgif-frame-051.jpg"
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ imageRendering: "auto" }}
             alt=""
           />
         </div>
       </motion.div>
 
-      {/* ═══ CENTRE GLOW LINE (appears during split) ═══ */}
+      {/* ═══ HORIZONTAL GLOW LINE (appears during split) ═══ */}
       <AnimatePresence>
         <motion.div
-          className="pointer-events-none absolute left-1/2 top-0 z-[210] h-full -translate-x-1/2"
+          className="pointer-events-none absolute left-0 top-1/2 z-[210] w-full -translate-y-1/2"
           style={{
-            width: 2,
+            height: 2,
             background:
-            "linear-gradient(to bottom, transparent 2%, #f0d68a 25%, #fff8e7 50%, #f0d68a 75%, transparent 98%)",
+            "linear-gradient(to right, transparent 2%, #f0d68a 25%, #fff8e7 50%, #f0d68a 75%, transparent 98%)",
             boxShadow:
             "0 0 60px 12px rgba(240,214,138,0.5), 0 0 120px 30px rgba(201,169,110,0.25)",
           }}
-          initial={{ opacity: 0, scaleY: 0 }}
-          animate={{ opacity: [0, 1, 1, 0], scaleY: [0.3, 1, 1, 1] }}
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: [0, 1, 1, 0], scaleX: [0.3, 1, 1, 1] }}
           transition={{ duration: 1.6, times: [0, 0.15, 0.7, 1] }}
         />
       </AnimatePresence>
