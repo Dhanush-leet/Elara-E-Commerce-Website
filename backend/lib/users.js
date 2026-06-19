@@ -1,43 +1,34 @@
-import "server-only";
 import fs from "node:fs/promises";
 import path from "node:path";
 import bcrypt from "bcryptjs";
 
-export type StoredUser = {
-  id: string;
-  name: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
-};
-
 const DATA_DIR = path.join(process.cwd(), ".data");
 const FILE = path.join(DATA_DIR, "users.json");
 
-async function readAll(): Promise<StoredUser[]> {
+async function readAll() {
   try {
     const raw = await fs.readFile(FILE, "utf-8");
-    return JSON.parse(raw) as StoredUser[];
+    return JSON.parse(raw);
   } catch {
     return [];
   }
 }
 
-async function writeAll(users: StoredUser[]) {
+async function writeAll(users) {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(FILE, JSON.stringify(users, null, 2), "utf-8");
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email) {
   const users = await readAll();
   return users.find((u) => u.email.toLowerCase() === email.toLowerCase()) ?? null;
 }
 
-export async function createUser(name: string, email: string, password: string) {
+export async function createUser(name, email, password) {
   const existing = await getUserByEmail(email);
   if (existing) throw new Error("An account with this email already exists.");
   const users = await readAll();
-  const user: StoredUser = {
+  const user = {
     id: `u_${Date.now().toString(36)}`,
     name: name.trim(),
     email: email.trim().toLowerCase(),
@@ -49,7 +40,7 @@ export async function createUser(name: string, email: string, password: string) 
   return user;
 }
 
-export async function verifyCredentials(email: string, password: string) {
+export async function verifyCredentials(email, password) {
   const user = await getUserByEmail(email);
   if (!user) return null;
   const ok = await bcrypt.compare(password, user.passwordHash);

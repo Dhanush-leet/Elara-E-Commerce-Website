@@ -1,21 +1,25 @@
-node_modules/
-.next/
-out/
-.env*.local
-.data/
-*.tsbuildinfo
-next-env.d.ts
+# Dependency folders
+**/node_modules/
 
-# Local environment/temp/helper files
-.claude/
-.frames/
-.frames2/
-.frames3/
-ezgif-*/
-upscale_*.py
-upscale_*.jpg
-inspect_video.py
+# Next.js build outputs
+**/out/
+**/.next/
+**/*.tsbuildinfo
+**/next-env.d.ts
 
-# Unused heavy media files
-public/intro-bag*.mp4
-public/intro-poster.jpg
+# Local data & environment config files
+**/.env
+**/.env*.local
+**/.data/
+
+# Temporary / testing files
+**/.claude/
+**/.frames/
+**/.frames2/
+**/.frames3/
+**/ezgif-*/
+**/upscale_*.py
+**/upscale_*.jpg
+**/inspect_video.py
+**/public/intro-bag*.mp4
+**/public/intro-poster.jpg

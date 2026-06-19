@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+.env*.local
+.data/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local environment/temp/helper files
+.claude/
+.frames/
+.frames2/
+.frames3/
+ezgif-*/
+upscale_*.py
+upscale_*.jpg
+inspect_video.py
+
+# Unused heavy media files
+public/intro-bag*.mp4
+public/intro-poster.jpg

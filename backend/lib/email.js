@@ -1,18 +1,9 @@
-import "server-only";
-
-type SendArgs = { to: string; subject: string; html: string; text?: string };
+import nodemailer from "nodemailer";
 
 const FROM = process.env.EMAIL_FROM || "ELARA Maison <atelier@elara.maison>";
 
-/**
- * Sends transactional email. Three tiers, picked by which env vars exist:
- *   1. Resend  — set RESEND_API_KEY  (HTTP, no extra dep)
- *   2. SMTP    — set GMAIL_USER + GMAIL_APP_PASSWORD  (or SMTP_HOST/USER/PASS)
- *   3. Demo    — no keys: logs to the server console and resolves ok=true
- * so the whole flow works locally and goes live the moment keys are added.
- */
-export async function sendEmail({ to, subject, html, text }: SendArgs) {
-  // ── Tier 1: Resend ──────────────────────────────────────
+export async function sendEmail({ to, subject, html, text }) {
+  // 1. Resend API
   if (process.env.RESEND_API_KEY) {
     try {
       const res = await fetch("https://api.resend.com/emails", {
@@ -24,18 +15,17 @@ export async function sendEmail({ to, subject, html, text }: SendArgs) {
         body: JSON.stringify({ from: FROM, to, subject, html, text }),
       });
       if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
-      return { ok: true, provider: "resend" as const };
+      return { ok: true, provider: "resend" };
     } catch (err) {
       console.error("[email] Resend failed:", err);
     }
   }
 
-  // ── Tier 2: SMTP / Gmail ────────────────────────────────
+  // 2. SMTP / Gmail
   const smtpUser = process.env.GMAIL_USER || process.env.SMTP_USER;
   const smtpPass = process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS;
   if (smtpUser && smtpPass) {
     try {
-      const nodemailer = (await import("nodemailer")).default;
       const transport = nodemailer.createTransport({
         host: process.env.SMTP_HOST || "smtp.gmail.com",
         port: Number(process.env.SMTP_PORT || 465),
@@ -43,21 +33,20 @@ export async function sendEmail({ to, subject, html, text }: SendArgs) {
         auth: { user: smtpUser, pass: smtpPass },
       });
       await transport.sendMail({ from: FROM, to, subject, html, text });
-      return { ok: true, provider: "smtp" as const };
+      return { ok: true, provider: "smtp" };
     } catch (err) {
       console.error("[email] SMTP failed:", err);
     }
   }
 
-  // ── Tier 3: Demo ────────────────────────────────────────
+  // 3. Demo Mode (Console log)
   console.log(
     `\n[email · demo mode] → ${to}\n  subject: ${subject}\n  (add RESEND_API_KEY or GMAIL_USER + GMAIL_APP_PASSWORD to send for real)\n`
   );
-  return { ok: true, provider: "demo" as const };
+  return { ok: true, provider: "demo" };
 }
 
-// ── Premium HTML templates ────────────────────────────────
-const shell = (inner: string) => `
+const shell = (inner) => `
 <div style="margin:0;padding:0;background:#1a0f0a;font-family:'Helvetica Neue',Arial,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#f4f1ec;border:14px solid #1a0f0a;">
     <div style="padding:40px 40px 0;text-align:center;">
@@ -71,8 +60,9 @@ const shell = (inner: string) => `
   </div>
 </div>`;
 
-export function welcomeEmail(name?: string | null) {
+export function welcomeEmail(name) {
   const first = name?.split(" ")[0] || "there";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   return {
     subject: "Welcome to ELARA — carry the extraordinary",
     html: shell(`
@@ -88,7 +78,7 @@ export function welcomeEmail(name?: string | null) {
         to see new drops, private events, and atelier exclusives.
       </p>
       <p style="margin:28px 0;">
-        <a href="${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/collection"
+        <a href="${siteUrl}/collection"
            style="display:inline-block;background:#141210;color:#f4f1ec;text-decoration:none;padding:15px 30px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:999px;">
           Explore the Collection →
         </a>
@@ -97,16 +87,19 @@ export function welcomeEmail(name?: string | null) {
         Use code ELARA_2026 for 10% off your first order.
       </p>
     `),
-    text: `Welcome to ELARA, ${first}. Your account is open. Explore the collection at ${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/collection — use code ELARA_2026 for 10% off.`,
+    text: `Welcome to ELARA, ${first}. Your account is open. Explore the collection at ${siteUrl}/collection — use code ELARA_2026 for 10% off.`,
   };
 }
 
-export function orderEmail(opts: {
-  name?: string | null;
-  orderId: string;
-  total: string;
-  lines: { name: string; qty: number; price: string }[];
-}) {
+export function formatPrice(n) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
+export function orderEmail(opts) {
   const rows = opts.lines
     .map(
       (l) =>

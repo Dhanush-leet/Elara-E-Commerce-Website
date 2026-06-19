@@ -1,8 +1,6 @@
 import NextAuth, { type NextAuthConfig } from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { verifyCredentials } from "@/lib/users";
-import { sendEmail, welcomeEmail } from "@/lib/email";
 
 const providers: NextAuthConfig["providers"] = [
   Credentials({
@@ -15,9 +13,20 @@ const providers: NextAuthConfig["providers"] = [
       const email = creds?.email as string | undefined;
       const password = creds?.password as string | undefined;
       if (!email || !password) return null;
-      const user = await verifyCredentials(email, password);
-      if (!user) return null;
-      return { id: user.id, name: user.name, email: user.email };
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        if (res.ok) {
+          const user = await res.json();
+          return user;
+        }
+      } catch (err) {
+        console.error("[auth] credentials verification fetch failed:", err);
+      }
+      return null;
     },
   }),
 ];
@@ -57,9 +66,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // Push a welcome email to the customer's address on every sign-in.
     async signIn({ user }) {
       if (!user?.email) return;
-      const tmpl = welcomeEmail(user.name);
       try {
-        await sendEmail({ to: user.email, ...tmpl });
+        await fetch("http://localhost:5000/api/email/welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email, name: user.name }),
+        });
       } catch (err) {
         console.error("[auth] welcome email failed:", err);
       }
