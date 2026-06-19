@@ -1,0 +1,278 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --frame: 18px;
+  --accent: #e8442e;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --frame: 8px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  @apply bg-frame text-ink antialiased;
+  font-feature-settings: "ss01" on, "cv01" on;
+}
+
+/* ── The printed-magazine frame ─────────────────────────── */
+.site-frame {
+  display: none;
+}
+
+.page-canvas {
+  min-height: 100vh;
+  margin: 0;
+  background: #f4f1ec;
+}
+
+/* ── Typography helpers ─────────────────────────────────── */
+.display-mega {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+}
+
+.eyebrow-dot::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--accent);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ── Ruler tick divider (tailor's tape) ─────────────────── */
+.ruler-ticks {
+  height: 14px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(20, 18, 16, 0.45) 0 1px,
+    transparent 1px 9px
+  );
+  background-size: 90px 100%;
+  position: relative;
+}
+.ruler-ticks::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(20, 18, 16, 0.7) 0 1px,
+    transparent 1px 90px
+  );
+}
+.ruler-ticks-tall { height: 22px; }
+
+/* ── Marquee ────────────────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── Pills & buttons ────────────────────────────────────── */
+/* In @layer components so utilities (hidden, sm:inline-flex, !overrides) win. */
+@layer components {
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-ink/20 bg-paper px-4 py-2 text-xs uppercase tracking-wider transition-all duration-200;
+  }
+  .pill:hover {
+    @apply border-ink bg-ink text-paper;
+  }
+  .pill-solid {
+    @apply inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-xs uppercase tracking-wider text-paper transition-all duration-200;
+  }
+  .pill-solid:hover {
+    @apply bg-accent;
+  }
+
+  .badge-cta {
+    @apply inline-flex items-center gap-2 bg-ink px-3 py-2 text-[11px] font-semibold uppercase tracking-widest text-paper transition-colors duration-200;
+  }
+  .badge-cta .plus {
+    @apply flex h-5 w-5 items-center justify-center bg-accent text-paper;
+  }
+  .badge-accent {
+    @apply inline-block bg-accent px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-paper;
+  }
+  .badge-light {
+    @apply inline-block bg-paper px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-ink;
+  }
+}
+
+/* ── Focus rings (WCAG) ─────────────────────────────────── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Skeleton shimmer ───────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(110deg, #e7e2d9 30%, #f4f1ec 50%, #e7e2d9 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* ── Custom cursor ──────────────────────────────────────── */
+@media (pointer: fine) {
+  .has-custom-cursor,
+  .has-custom-cursor a,
+  .has-custom-cursor button {
+    cursor: none;
+  }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #1a0f0a; }
+::-webkit-scrollbar-thumb { background: #6b5b4d; border-radius: 5px; }
+
+/* ── Drag rail ──────────────────────────────────────────── */
+.drag-rail {
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.drag-rail::-webkit-scrollbar { display: none; }
+.drag-rail.dragging { cursor: grabbing; scroll-snap-type: none; }
+
+/* ── Checkmark draw ─────────────────────────────────────── */
+.check-draw {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: check-draw 0.7s var(--luxury) 0.25s forwards;
+}
+@keyframes check-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Card flip (CVV) ────────────────────────────────────── */
+.flip-scene { perspective: 1200px; }
+.flip-card {
+  transform-style: preserve-3d;
+  transition: transform 0.7s var(--luxury);
+}
+.flip-card.flipped { transform: rotateY(180deg); }
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back { transform: rotateY(180deg); }
+
+/* ── Floating hero tiles (image-trail ambient layer) ────── */
+@keyframes drift {
+  0%   { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  50%  { transform: translate(0, -22px) rotate(var(--r, 0deg)); }
+  100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+}
+.trail-float {
+  animation: drift var(--dur, 7s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  filter: blur(1.5px);
+}
+
+/* ── Intro loading bar (CSS-driven, can't freeze) ───────── */
+@keyframes loadbar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* ── Gold shimmer for luxury text ───────────────────────── */
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #b08d57 0%,
+    #f0d68a 25%,
+    #b08d57 50%,
+    #f0d68a 75%,
+    #b08d57 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer 4s linear infinite;
+}
+
+/* ── Grain texture overlay ──────────────────────────────── */
+.grain-overlay::after {
+  display: none;
+}
+
+/* ── Image reveal ───────────────────────────────────────── */
+@keyframes image-reveal {
+  from {
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+.image-reveal {
+  animation: image-reveal 1.2s var(--luxury) forwards;
+}
+
+/* ── Smooth hover lift for cards ────────────────────────── */
+.card-lift {
+  transition: transform 0.6s var(--luxury), box-shadow 0.6s var(--luxury);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(20, 18, 16, 0.15);
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+  }
+  .marquee-track { animation: none !important; }
+  html { scroll-behavior: auto; }
+}
