@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { createUser, verifyCredentials } from "./lib/users.js";
 import { sendEmail, welcomeEmail, orderEmail, formatPrice } from "./lib/email.js";
+import { createOrder } from "./lib/orders.js";
 
 dotenv.config();
 
@@ -55,7 +56,7 @@ app.post("/api/auth/verify", async (req, res) => {
 
 // Order Checkout Route
 app.post("/api/checkout", async (req, res) => {
-  const { items, amount, shipping, lineItems } = req.body;
+  const { items, amount, shipping, lineItems, method, bank, upi } = req.body;
 
   if (!items?.length || typeof amount !== "number") {
     return res.status(400).json({ error: "Invalid order payload" });
@@ -73,6 +74,23 @@ app.post("/api/checkout", async (req, res) => {
   const orderId = `ELR-${Date.now().toString(36).toUpperCase()}-${Math.floor(
     Math.random() * 900 + 100
   )}`;
+
+  // Persist order to JSON database
+  try {
+    const orderPayload = {
+      id: orderId,
+      amount,
+      method,
+      bank: method === "netbanking" ? bank : undefined,
+      upi: method === "upi" ? upi : undefined,
+      shipping,
+      items,
+      createdAt: new Date().toISOString(),
+    };
+    await createOrder(orderPayload);
+  } catch (err) {
+    console.error("[checkout] failed to save order to database:", err);
+  }
 
   // Email confirmation to shipping address if provided
   const to = shipping?.email;

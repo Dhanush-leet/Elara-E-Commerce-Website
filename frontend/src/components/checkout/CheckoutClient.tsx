@@ -100,12 +100,13 @@ export function CheckoutClient() {
   const { items, clear } = useCart();
   const toast = useUI((s) => s.toast);
   const [step, setStep] = useState(0);
-  const [method, setMethod] = useState<"card" | "upi" | "razorpay">("card");
+  const [method, setMethod] = useState<"card" | "upi" | "netbanking" | "razorpay">("card");
   const [shipping, setShipping] = useState<Shipping>({
     name: "", email: "", phone: "", address: "", city: "", pin: "",
   });
   const [card, setCard] = useState<Card>({ number: "", name: "", expiry: "", cvv: "" });
   const [upi, setUpi] = useState("");
+  const [bank, setBank] = useState("");
   const [cvvFocus, setCvvFocus] = useState(false);
   const [processing, setProcessing] = useState(false);
 
@@ -135,6 +136,8 @@ export function CheckoutClient() {
           lineItems: items.map((i) => ({ name: i.name, qty: i.qty, price: i.price })),
           amount: total,
           method,
+          bank: method === "netbanking" ? bank : undefined,
+          upi: method === "upi" ? upi : undefined,
           shipping,
         }),
       });
@@ -166,7 +169,9 @@ export function CheckoutClient() {
       ? card.number.replace(/\s/g, "").length >= 15 && card.name && card.expiry && card.cvv.length >= 3
       : method === "upi"
         ? upi.includes("@")
-        : true;
+        : method === "netbanking"
+          ? !!bank
+          : true;
 
   return (
     <div className="mx-auto grid max-w-6xl gap-12 px-4 py-10 sm:px-8 lg:grid-cols-[3fr_2fr]">
@@ -215,7 +220,7 @@ export function CheckoutClient() {
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="mb-6 flex flex-wrap gap-2" role="radiogroup" aria-label="Payment method">
-                {([["card", "Card"], ["upi", "UPI"], ["razorpay", "Razorpay"]] as const).map(([id, label]) => (
+                {([["card", "Card"], ["upi", "UPI"], ["netbanking", "Net Banking"], ["razorpay", "Razorpay"]] as const).map(([id, label]) => (
                   <button
                     key={id}
                     role="radio"
@@ -299,6 +304,24 @@ export function CheckoutClient() {
                 <FloatingInput label="UPI ID (name@bank)" value={upi} onChange={setUpi} className="max-w-md" />
               )}
 
+              {method === "netbanking" && (
+                <div className="max-w-md rounded-2xl border border-ink/15 bg-paper p-5">
+                  <label className="block mb-2 font-mono text-[9px] uppercase tracking-widest text-smoke">Select your Bank</label>
+                  <select
+                    value={bank}
+                    onChange={(e) => setBank(e.target.value)}
+                    className="w-full rounded-2xl border border-ink/20 bg-paper px-4 py-4 text-sm focus:border-ink focus:outline-none"
+                  >
+                    <option value="">-- Choose a Bank --</option>
+                    <option value="hdfc">HDFC Bank</option>
+                    <option value="sbi">State Bank of India</option>
+                    <option value="icici">ICICI Bank</option>
+                    <option value="axis">Axis Bank</option>
+                    <option value="kotak">Kotak Mahindra Bank</option>
+                  </select>
+                </div>
+              )}
+
               {method === "razorpay" && (
                 <p className="max-w-md rounded-2xl border border-ink/15 bg-paper p-5 text-sm text-ink/70">
                   You&apos;ll be redirected to Razorpay to complete payment with
@@ -344,7 +367,15 @@ export function CheckoutClient() {
                 </div>
                 <div className="rounded-2xl border border-ink/15 bg-paper p-5">
                   <h3 className="mb-2 font-mono text-[10px] uppercase tracking-[0.25em] text-smoke">Pay with</h3>
-                  <p className="text-sm font-semibold uppercase">{method === "card" ? `Card •••• ${card.number.slice(-4)}` : method === "upi" ? `UPI — ${upi}` : "Razorpay"}</p>
+                  <p className="text-sm font-semibold uppercase">
+                    {method === "card"
+                      ? `Card •••• ${card.number.slice(-4)}`
+                      : method === "upi"
+                        ? `UPI — ${upi}`
+                        : method === "netbanking"
+                          ? `Net Banking — ${bank.toUpperCase()}`
+                          : "Razorpay"}
+                  </p>
                   <button onClick={() => setStep(1)} className="mt-3 font-mono text-[10px] uppercase tracking-widest text-accent">Edit</button>
                 </div>
               </div>
