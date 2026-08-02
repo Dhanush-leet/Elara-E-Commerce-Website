@@ -14,7 +14,8 @@ const providers: NextAuthConfig["providers"] = [
       const password = creds?.password as string | undefined;
       if (!email || !password) return null;
       try {
-        const res = await fetch("http://localhost:5000/api/auth/verify", {
+        const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${backendUrl}/api/auth/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -67,7 +68,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user }) {
       if (!user?.email) return;
       try {
-        await fetch("http://localhost:5000/api/email/welcome", {
+        const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        await fetch(`${backendUrl}/api/email/welcome`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: user.email, name: user.name }),
