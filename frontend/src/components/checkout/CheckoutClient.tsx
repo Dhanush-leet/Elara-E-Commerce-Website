@@ -224,69 +224,9 @@ export function CheckoutClient() {
       if (!res.ok || !data.ok) throw new Error(data.error ?? "Payment failed");
 
       if (method === "razorpay") {
-        if (data.demo) {
-          setSimulatorOrderId(data.razorpayOrderId);
-          setSimulatorAmount(total);
-          setShowSimulator(true);
-          return;
-        } else {
-          const loaded = await loadRazorpayScript();
-          if (!loaded) {
-            throw new Error("Failed to load Razorpay payment SDK");
-          }
-
-          const options = {
-            key: data.razorpayKeyId,
-            amount: Math.round(total * 100),
-            currency: "INR",
-            name: "Elara Maison",
-            description: "Order Checkout",
-            order_id: data.razorpayOrderId,
-            prefill: {
-              name: shipping.name,
-              email: shipping.email,
-              contact: shipping.phone,
-            },
-            theme: {
-              color: "#1e1b18",
-            },
-            handler: async function (response: any) {
-              try {
-                const verifyRes = await fetch("/api/checkout/verify", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_signature: response.razorpay_signature,
-                    demo: false,
-                    items: items.map((i) => ({ id: i.id, qty: i.qty })),
-                    lineItems: items.map((i) => ({ name: i.name, qty: i.qty, price: i.price })),
-                    amount: total,
-                    shipping,
-                  }),
-                });
-                const verifyData = await verifyRes.json();
-                if (!verifyRes.ok || !verifyData.ok) {
-                  throw new Error(verifyData.error ?? "Payment verification failed");
-                }
-                finalizeOrder(verifyData.orderId);
-              } catch (e: any) {
-                setProcessing(false);
-                toast(e.message ?? "Verification failed");
-              }
-            },
-            modal: {
-              ondismiss: function () {
-                setProcessing(false);
-                toast("Payment checkout closed");
-              }
-            }
-          };
-          const rzp = new (window as any).Razorpay(options);
-          rzp.open();
-          return;
-        }
+        window.open(`https://razorpay.me/@gowrisankardhanush?amount=${total}`, "_blank");
+        finalizeOrder(data.orderId || `order_${Date.now()}`);
+        return;
       }
 
       finalizeOrder(data.orderId);
@@ -521,8 +461,7 @@ export function CheckoutClient() {
 
               {method === "razorpay" && (
                 <p className="max-w-md rounded-2xl border border-ink/15 bg-paper p-5 text-sm text-ink/70">
-                  You&apos;ll be redirected to Razorpay to complete payment with
-                  card, UPI, netbanking or wallets.
+                  You&apos;ll be redirected to our Razorpay.me page to complete your payment securely.
                 </p>
               )}
 
