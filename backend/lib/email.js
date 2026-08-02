@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const FROM = process.env.EMAIL_FROM || "ELARA Maison <atelier@elara.maison>";
+const FROM = process.env.EMAIL_FROM || (process.env.RESEND_API_KEY ? "onboarding@resend.dev" : "ELARA Maison <atelier@elara.maison>");
 
 export async function sendEmail({ to, subject, html, text }) {
   // 1. Resend API
