@@ -1,0 +1,16 @@
+{
+  "services": {
+    "frontend": {
+      "rootDirectory": "frontend"
+    },
+    "backend": {
+      "rootDirectory": "backend"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/backend/(.*)",
+      "destination": "/backend/$1"
+    }
+  ]
+}

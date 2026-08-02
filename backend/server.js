@@ -266,6 +266,10 @@ app.post("/api/email/welcome", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Elara Express backend running on port ${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Elara Express backend running on port ${port}`);
+  });
+}
+
+export default app;
