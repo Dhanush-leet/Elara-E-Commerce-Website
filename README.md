@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="status" src="https://img.shields.io/badge/status-in%20development-orange">
+  <img alt="status" src="https://img.shields.io/badge/status-live-brightgreen">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-blue">
   <img alt="next.js" src="https://img.shields.io/badge/Next.js-14-black">
   <img alt="payments" src="https://img.shields.io/badge/Payments-Razorpay-0d5eff">
@@ -9,6 +9,8 @@
 # 👜 Elara — E-Commerce Platform
 
 Elara is a modern, premium e-commerce web application built with a focus on immersive aesthetics and a seamless user experience. It features interactive UI elements, full-stack authentication, and integrated payment flows.
+
+**🔗 Live App:** [elara-e-commerce-website.vercel.app](https://elara-e-commerce-website.vercel.app/)
 
 ---
 
@@ -33,14 +35,37 @@ Elara is a modern, premium e-commerce web application built with a focus on imme
 | Animations | Framer Motion, GSAP, Lenis (smooth scrolling) |
 | State Management | Zustand |
 | Auth | NextAuth.js (v5 beta) |
+| Hosting | Vercel |
 
 ### Backend
 | Category | Technology |
 |---|---|
-| Framework | Node.js with Express |
+| Runtime | Node.js |
+| Framework | Express.js |
 | Payments | Razorpay SDK |
 | Mailing | Nodemailer |
 | Security | bcryptjs, dotenv |
+| Hosting | Railway |
+
+---
+
+## 🏗️ Deployment Architecture
+
+Elara runs as two independently hosted services that communicate over HTTPS:
+
+```
+┌─────────────────────┐          ┌──────────────────────┐
+│   Frontend (Next.js) │  HTTPS   │  Backend (Express.js) │
+│   Hosted on Vercel    │ ───────▶ │   Hosted on Railway    │
+│                       │          │                        │
+│  elara-e-commerce-    │          │  Handles orders,       │
+│  website.vercel.app   │          │  Razorpay, email       │
+└─────────────────────┘          └──────────────────────┘
+```
+
+- **Frontend** auto-deploys to Vercel on every push to `main`
+- **Backend** auto-deploys to Railway on every push to `main`
+- Frontend talks to backend via `NEXT_PUBLIC_API_URL`, pointing to the Railway-hosted API
 
 ---
 
@@ -76,7 +101,7 @@ elara/
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Local Development)
 
 ### Prerequisites
 - Node.js (v18+)
@@ -91,7 +116,7 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend` directory with your secrets:
+Create a `.env` file in the `backend` directory:
 
 ```env
 PORT=5000
@@ -121,6 +146,7 @@ Create a `.env.local` file in the `frontend` directory:
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 AUTH_SECRET=your_nextauth_secret
+NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
 Start the frontend development server:
@@ -131,7 +157,7 @@ npm run dev
 
 ### 3. Open the App
 
-Navigate to [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Navigate to [http://localhost:3000](http://localhost:3000) in your browser to view the application locally, or visit the [live deployment](https://elara-e-commerce-website.vercel.app/).
 
 ---
 
@@ -149,11 +175,11 @@ Navigate to [http://localhost:3000](http://localhost:3000) in your browser to vi
 - [x] Checkout flow with 3D card preview + UPI QR
 - [x] Coupon/discount engine
 - [x] Razorpay payment integration
+- [x] Production deployment (Vercel + Railway)
 - [ ] Order history & tracking dashboard
 - [ ] Admin panel for inventory & order management
 - [ ] Wishlist and product reviews
 - [ ] 3D product viewer (Three.js)
-- [ ] Deployment (Vercel + backend hosting)
 
 ---
 
@@ -173,4 +199,4 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 **Dhanush G**
 Final-year B.Tech CSBS student | Full-Stack Developer
-[GitHub](https://github.com/Dhanush-leet)
+[GitHub](https://github.com/Dhanush-leet) · [Live Demo](https://elara-e-commerce-website.vercel.app/)
