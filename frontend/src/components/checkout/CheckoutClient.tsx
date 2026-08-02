@@ -483,7 +483,7 @@ export function CheckoutClient() {
                       />
                     </div>
                     <img 
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=elara@bank&pn=Elara" 
+                      src="/upi-qr.png" 
                       alt="Scan to pay with UPI"
                       className="relative z-0 w-full h-auto object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
                     />
