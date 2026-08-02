@@ -12,14 +12,21 @@ const nextConfig = {
     if (!backendUrl || backendUrl === "undefined" || backendUrl === "null") {
       backendUrl = "http://localhost:5000";
     }
+    // Strip any accidental trailing slashes from the URL
+    backendUrl = backendUrl.replace(/\/$/, "");
+
     return [
       {
         source: "/api/signup",
         destination: `${backendUrl}/api/signup`,
       },
       {
-        source: "/api/checkout/:path*",
-        destination: `${backendUrl}/api/checkout/:path*`,
+        source: "/api/checkout",
+        destination: `${backendUrl}/api/checkout`,
+      },
+      {
+        source: "/api/checkout/verify",
+        destination: `${backendUrl}/api/checkout/verify`,
       }
     ];
   },
