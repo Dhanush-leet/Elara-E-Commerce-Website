@@ -6,7 +6,7 @@
   <img alt="auth" src="https://img.shields.io/badge/Auth-NextAuth.js-purple">
 </p>
 
-# 👜 Elara — E-Commerce Platform
+# 👜 Elara — E-Commerce Website
 
 Elara is a modern, premium e-commerce web application built with a focus on immersive aesthetics and a seamless user experience. It features interactive UI elements, full-stack authentication, and integrated payment flows.
 
