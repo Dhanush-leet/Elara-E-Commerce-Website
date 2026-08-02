@@ -29,7 +29,7 @@ export function LoginClient({ googleEnabled }: { googleEnabled: boolean }) {
       return;
     }
     setLoading(true);
-    await signIn("google", { callbackUrl });
+    await signIn("google", { callbackUrl: params.get("callbackUrl") || "/" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -14,8 +14,8 @@ const nextConfig = {
         destination: "http://localhost:5000/api/signup",
       },
       {
-        source: "/api/checkout",
-        destination: "http://localhost:5000/api/checkout",
+        source: "/api/checkout/:path*",
+        destination: "http://localhost:5000/api/checkout/:path*",
       },
     ];
   },

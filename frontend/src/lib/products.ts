@@ -39,7 +39,7 @@ export const products: Product[] = [
     name: "Méridienne Tote",
     category: "Totes",
     model: "tote",
-    price: 128000,
+    price: 149,
     blurb: "A structured silhouette in full-grain calfskin.\nBuilt to carry a day that refuses to end.",
     story:
       "Cut from a single hide and burnished by hand over three days, the Méridienne is our atelier's answer to the working tote — architectural at rest, effortless in motion.",
@@ -64,8 +64,8 @@ export const products: Product[] = [
     name: "Aube Crossbody",
     category: "Crossbody",
     model: "crossbody",
-    price: 86500,
-    compareAt: 104000,
+    price: 260,
+    compareAt: 378,
     blurb: "Soft-pleated lambskin on an adjustable chain.\nMorning light, made carriable.",
     story:
       "The Aube's pleats are folded wet and dried under linen weights — no two bags hold the light the same way.",
@@ -90,7 +90,7 @@ export const products: Product[] = [
     name: "Vesper Clutch",
     category: "Clutches",
     model: "clutch",
-    price: 64000,
+    price: 198,
     blurb: "An evening line drawn in mirror-polish calf.\nCarries exactly enough.",
     story:
       "Named for the first star of evening, the Vesper closes with a single machined clasp that takes forty minutes to polish.",
@@ -114,7 +114,7 @@ export const products: Product[] = [
     name: "Petit Soleil",
     category: "Mini Bags",
     model: "mini",
-    price: 58000,
+    price: 151,
     blurb: "A mini top-handle with outsized presence.\nSunlight in bag form.",
     story:
       "Scaled down but never simplified — the Petit Soleil keeps every construction detail of its full-size siblings, including the hand-rolled handle.",
@@ -139,7 +139,7 @@ export const products: Product[] = [
     name: "Voyage 48H",
     category: "Travel",
     model: "weekender",
-    price: 196000,
+    price: 230,
     blurb: "Two nights, one bag, zero compromise.\nThe weekender, re-engineered.",
     story:
       "A collapsible brass frame lets the Voyage stand open like a steamer trunk, then cinch flat for the overhead bin.",
@@ -163,7 +163,7 @@ export const products: Product[] = [
     name: "Lune Hobo",
     category: "Crossbody",
     model: "hobo",
-    price: 98000,
+    price: 287,
     blurb: "A crescent of tumbled leather that softens with you.\nGravity does the styling.",
     story:
       "Tumbled for eleven hours before cutting, the Lune arrives pre-softened — it drapes from day one and only improves.",
@@ -188,7 +188,7 @@ export const products: Product[] = [
     name: "Arc Shoulder",
     category: "Crossbody",
     model: "crossbody",
-    price: 112000,
+    price: 212,
     blurb: "One continuous curve from strap to base.\nMinimalism with a spine.",
     story:
       "The Arc is moulded over a beechwood form for 48 hours, giving it a single unbroken line no flat pattern could produce.",
@@ -211,7 +211,7 @@ export const products: Product[] = [
     name: "Rive Bucket",
     category: "Totes",
     model: "bucket",
-    price: 92000,
+    price: 225,
     blurb: "Drawstring ease, riverside composure.\nThe bucket bag, tailored.",
     story:
       "Its drawstring runs through hand-set eyelets and closes with a knot we teach every artisan in their first year.",
@@ -234,7 +234,7 @@ export const products: Product[] = [
     name: "Noctis Mini",
     category: "Mini Bags",
     model: "mini",
-    price: 71000,
+    price: 128,
     blurb: "After-dark hardware on a palm-sized frame.\nSmall bag, long night.",
     story:
       "Blackened brass, midnight lacquer edges, and a strap that converts from shoulder to crossbody with one gesture.",
@@ -258,7 +258,7 @@ export const products: Product[] = [
     name: "Sable Satchel",
     category: "Totes",
     model: "satchel",
-    price: 134000,
+    price: 127,
     blurb: "The briefcase your grandfather promised,\nredrawn for now.",
     story:
       "Twin saddle-stitched gussets expand a full eight centimetres — laptop, portfolio, and the day's ambitions included.",
@@ -281,8 +281,8 @@ export const products: Product[] = [
     name: "Ondine Pochette",
     category: "Clutches",
     model: "clutch",
-    price: 49000,
-    compareAt: 61000,
+    price: 258,
+    compareAt: 369,
     blurb: "A wave of ruched satin-leather.\nHolds a phone, a card, a secret.",
     story:
       "Each Ondine is ruched by a single artisan in one sitting — pausing would break the rhythm of the gathers.",
@@ -307,7 +307,7 @@ export const products: Product[] = [
     name: "Atlas Weekender",
     category: "Travel",
     model: "weekender",
-    price: 168000,
+    price: 287,
     blurb: "Maps the world from a luggage rack.\nCanvas body, leather everything else.",
     story:
       "Waxed canvas panels keep the Atlas under airline weight limits while bridle leather takes every point of stress.",
