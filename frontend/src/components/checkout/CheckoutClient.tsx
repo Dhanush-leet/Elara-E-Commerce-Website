@@ -164,7 +164,7 @@ export function CheckoutClient() {
   const [cvvFocus, setCvvFocus] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [couponCode, setCouponCode] = useState("");
-  const [discountApplied, setDiscountApplied] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
 
   // Razorpay simulator state
   const [showSimulator, setShowSimulator] = useState(false);
@@ -172,9 +172,10 @@ export function CheckoutClient() {
   const [simulatorAmount, setSimulatorAmount] = useState(0);
 
   const subtotal = cartTotal(items);
-  const shipCost = subtotal >= 50000 ? 0 : 1200;
-  const discountAmount = discountApplied ? subtotal * 0.1 : 0;
-  const total = subtotal - discountAmount + shipCost;
+  const shipCost = appliedCoupon === "DHANUSH3001" ? 0 : (subtotal >= 50000 ? 0 : 1200);
+  const discountAmount = appliedCoupon === "DHANUSH3001" ? subtotal : (appliedCoupon === "ELARA3001" ? subtotal * 0.1 : 0);
+  const flatFee = appliedCoupon === "DHANUSH3001" ? 10 : 0;
+  const total = subtotal - discountAmount + shipCost + flatFee;
 
   if (items.length === 0 && !processing) {
     return (
@@ -627,29 +628,38 @@ export function CheckoutClient() {
               placeholder="Coupon Code" 
               value={couponCode} 
               onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-              disabled={discountApplied}
+              disabled={!!appliedCoupon}
               className="flex-1 rounded-full border border-ink/20 bg-transparent px-4 py-2 text-xs focus:border-ink focus:outline-none disabled:opacity-50"
             />
             <button 
               onClick={() => {
                 if (couponCode === "ELARA3001") {
-                  setDiscountApplied(true);
+                  setAppliedCoupon(couponCode);
                   toast("Coupon applied! 10% off.");
+                } else if (couponCode === "DHANUSH3001") {
+                  setAppliedCoupon(couponCode);
+                  toast("Special coupon applied!");
                 } else {
                   toast("Invalid coupon code.");
                 }
               }}
-              disabled={discountApplied || !couponCode}
+              disabled={!!appliedCoupon || !couponCode}
               className="rounded-full bg-ink px-4 py-2 text-xs text-paper disabled:opacity-50"
             >
-              {discountApplied ? "Applied" : "Apply"}
+              {appliedCoupon ? "Applied" : "Apply"}
             </button>
           </div>
           <div className="flex justify-between mt-2"><dt className="text-smoke">Subtotal</dt><dd className="font-mono">{formatPrice(subtotal)}</dd></div>
-          {discountApplied && (
+          {appliedCoupon === "ELARA3001" && (
             <div className="flex justify-between text-accent"><dt>Discount (10%)</dt><dd className="font-mono">-{formatPrice(discountAmount)}</dd></div>
           )}
+          {appliedCoupon === "DHANUSH3001" && (
+            <div className="flex justify-between text-accent"><dt>Discount (100%)</dt><dd className="font-mono">-{formatPrice(discountAmount)}</dd></div>
+          )}
           <div className="flex justify-between"><dt className="text-smoke">Shipping</dt><dd className="font-mono">{shipCost === 0 ? "Free" : formatPrice(shipCost)}</dd></div>
+          {appliedCoupon === "DHANUSH3001" && (
+            <div className="flex justify-between text-smoke"><dt>Fee</dt><dd className="font-mono">{formatPrice(flatFee)}</dd></div>
+          )}
           <div className="flex justify-between text-base font-bold"><dt>Total</dt><dd className="font-mono">{formatPrice(total)}</dd></div>
         </dl>
       </aside>
