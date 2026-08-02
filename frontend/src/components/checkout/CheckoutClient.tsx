@@ -483,7 +483,7 @@ export function CheckoutClient() {
                       />
                     </div>
                     <img 
-                      src="/upi-qr.png" 
+                      src="/upi-qr.jpg" 
                       alt="Scan to pay with UPI"
                       className="relative z-0 w-full h-auto object-contain rounded-xl transition-transform duration-500 group-hover:scale-[1.02]"
                     />
